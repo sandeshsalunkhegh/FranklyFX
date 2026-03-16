@@ -1,5 +1,5 @@
-./__pycache__/
-./venv/
-./examples/
-./core/__pycache__/
-./infrastructure/__pycache__/
+__pycache__/
+venv/
+examples/
+core/__pycache__/*
+infrastructure/__pycache__/*
