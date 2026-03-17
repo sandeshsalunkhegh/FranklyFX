@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 from core.models import TransactionQuote
 from core.service import CurrencyConversionService
-from infrastructure.providers import FrankfurterProvider
+from infrastructure.providers import FrankfurterProvider, ExchangeRatesApiProvider, FallbackFXProvider
 
 
 class QuoteRequest(BaseModel):
@@ -47,7 +47,10 @@ app.add_middleware(
 
 
 def _build_service(margin: float | None) -> CurrencyConversionService:
-    provider = FrankfurterProvider()
+    provider = FallbackFXProvider(providers=[
+        FrankfurterProvider(),
+        ExchangeRatesApiProvider()
+    ])
     default_margin = margin if margin is not None else 0.02
     return CurrencyConversionService(provider=provider, default_margin=default_margin)
 
@@ -61,7 +64,7 @@ def _to_response_model(quote: TransactionQuote) -> QuoteResponse:
         consumerRate=quote.consumer_rate,
         finalPayout=quote.final_payout,
         feesApplied=quote.fees_applied,
-        providerName="FranklyFX (via Frankfurter)",
+        providerName=quote.provider_name,
     )
 
 

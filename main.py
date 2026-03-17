@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from infrastructure.providers import FrankfurterProvider
+from infrastructure.providers import FrankfurterProvider, ExchangeRatesApiProvider, FallbackFXProvider
 from core.service import CurrencyConversionService
 
 # Configure production-level logging
@@ -17,8 +17,11 @@ def main(amount :float, base :str, target :str, flat_fee :float) -> None:
     """Entrypoint for running a single FX quote example."""
     logger.info("Starting FranklyFX Application...")
 
-    # 1. Instantiate the provider
-    api_provider = FrankfurterProvider()
+    # 1. Instantiate the fallback provider chain
+    api_provider = FallbackFXProvider(providers=[
+        FrankfurterProvider(),
+        ExchangeRatesApiProvider()
+    ])
 
     # 2. Inject the provider into the business logic service (using a 2% spread)
     fx_service = CurrencyConversionService(provider=api_provider, default_margin=0.02)
