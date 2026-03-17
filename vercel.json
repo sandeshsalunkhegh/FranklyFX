@@ -21,12 +21,13 @@
     {
       "src": "/(.*)",
       "dest": "web/dist/$1"
-    }
-  ],
-  "rewrites": [
+    },
     {
-      "source": "/(.*)",
-      "destination": "web/dist/index.html"
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "web/dist/index.html"
     }
   ]
 }
