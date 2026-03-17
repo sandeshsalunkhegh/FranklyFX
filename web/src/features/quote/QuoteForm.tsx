@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { QuoteRequest } from '../../models';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
+import { CurrencySelect } from '../../components/CurrencySelect';
 import { ArrowRightLeft, DollarSign } from 'lucide-react';
 
 interface QuoteFormProps {
@@ -15,6 +16,7 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
   const [amount, setAmount] = useState('1000');
   const [flatFee, setFlatFee] = useState('5');
   const [margin, setMargin] = useState('2.0');
+  const [isSwapping, setIsSwapping] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +30,8 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
   };
 
   const handleSwap = () => {
+    setIsSwapping(true);
+    setTimeout(() => setIsSwapping(false), 300);
     setBaseCurrency(targetCurrency);
     setTargetCurrency(baseCurrency);
   };
@@ -36,14 +40,11 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex items-center space-x-3">
         <div className="flex-1 min-w-0">
-          <Input
+          <CurrencySelect
             label="From"
             value={baseCurrency}
-            onChange={(e) => setBaseCurrency(e.target.value)}
-            placeholder="e.g. USD"
-            maxLength={3}
+            onChange={setBaseCurrency}
             required
-            className="uppercase"
           />
         </div>
         
@@ -51,7 +52,7 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
           <button
             type="button"
             onClick={handleSwap}
-            className="p-2.5 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-blue-600 transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className={`p-2.5 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-blue-600 transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:outline-none ${isSwapping ? 'rotate-180 scale-110' : ''}`}
             title="Swap Currencies"
           >
             <ArrowRightLeft size={18} />
@@ -59,14 +60,11 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
         </div>
 
         <div className="flex-1 min-w-0">
-          <Input
+          <CurrencySelect
             label="To"
             value={targetCurrency}
-            onChange={(e) => setTargetCurrency(e.target.value)}
-            placeholder="e.g. EUR"
-            maxLength={3}
+            onChange={setTargetCurrency}
             required
-            className="uppercase"
           />
         </div>
       </div>
