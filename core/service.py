@@ -32,10 +32,13 @@ class CurrencyConversionService:
 
         actual_margin = margin if margin is not None else self.margin
 
+        # Phase 1 UX Redesign: Deduct the sender's flat fee entirely natively from the Base Currency 
+        # (Source funds) BEFORE calculating the conversion multiplier.
+        chargeable_amount = max(0.0, amount - flat_fee)
+
         interbank_rate = exchange_rate_data.rate
         consumer_rate = interbank_rate * (1 - actual_margin)
-        target_amount_before_fees = amount * consumer_rate
-        final_payout = target_amount_before_fees - flat_fee
+        final_payout = chargeable_amount * consumer_rate
 
         return TransactionQuote(
             base_currency=base.upper(),

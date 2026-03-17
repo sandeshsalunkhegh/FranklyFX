@@ -82,7 +82,7 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
           required
         />
         <Input
-          label="Flat Fee (in Target)"
+          label={`Flat Fee (${baseCurrency})`}
           type="number"
           min="0"
           step="0.01"

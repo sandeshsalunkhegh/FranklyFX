@@ -38,7 +38,7 @@ def main(amount :float, base :str, target :str, flat_fee :float) -> None:
         print("-" * 45)
         print(f"Interbank:    {quote.interbank_rate:.4f} (Wholesale rate)")
         print(f"Retail Rate:  {quote.consumer_rate:.4f} (After 2.0% spread)")
-        print(f"Flat Fee:     {quote.fees_applied:.2f} {quote.target_currency}")
+        print(f"Flat Fee:     {quote.fees_applied:.2f} {quote.base_currency}")
         print("-" * 45)
         print(f"FINAL PAYOUT: {quote.final_payout:.2f} {quote.target_currency}")
         print("=" * 45 + "\n")
