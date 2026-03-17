@@ -9,7 +9,7 @@ This open-source project securely fetches real-time currency exchange rates and 
 * **Real-time Free Data**: Built on top of the Frankfurter API.
 * **Enterprise Architecture**: Strict separation of concerns (Domain/Core, Infrastructure, Web).
 * **Cross-Platform Interfaces**: 
-  - A comprehensive **Python FastAPI** backend REST layer (`index.py`).
+  - A comprehensive **Python FastAPI** backend REST layer (`api.py`).
   - A terminal entry point CLI script for operational testing (`main.py`).
   - A modern **React + TypeScript** web client for an intuitive Quote Builder UI (`web/`).
 
@@ -41,7 +41,7 @@ The backend acts as the core engine to fetch rates and execute business logic.
    ```
 4. **Start the FastAPI server (Execution):**
    ```bash
-   uvicorn index:app --reload --port 8000
+   uvicorn api:app --reload --port 8000
    ```
    *Execution Detail:* The backend server runs on `http://127.0.0.1:8000`. It exposes the `POST /api/quote` REST endpoint and accepts CORS requests from the frontend.
 
