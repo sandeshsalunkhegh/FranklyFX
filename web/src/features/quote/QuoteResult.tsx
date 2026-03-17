@@ -28,14 +28,14 @@ export function QuoteResult({ quote }: QuoteResultProps) {
             Valid Now
           </span>
         </div>
-        
+
         <div className="mt-4 flex flex-col sm:flex-row items-baseline space-y-2 sm:space-y-0 sm:space-x-3">
           <span className="text-4xl font-bold tracking-tight">
             {formatMoney(quote.finalPayout, quote.targetCurrency)}
           </span>
           <span className="text-blue-200 font-medium">Final Payout</span>
         </div>
-        
+
         <p className="text-sm text-blue-200 mt-2 flex items-center">
           Converting {formatMoney(quote.originalAmount, quote.baseCurrency)}
         </p>
@@ -65,7 +65,7 @@ export function QuoteResult({ quote }: QuoteResultProps) {
             <span className="text-sm">Flat Fee Applied</span>
           </div>
           <span className="font-medium text-red-600">
-            -{formatMoney(quote.feesApplied, quote.targetCurrency)}
+            -{formatMoney(quote.feesApplied, quote.baseCurrency)}
           </span>
         </div>
       </div>
