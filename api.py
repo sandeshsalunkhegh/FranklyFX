@@ -46,13 +46,14 @@ app.add_middleware(
 )
 
 
-def _build_service(margin: float | None) -> CurrencyConversionService:
+def _build_service() -> CurrencyConversionService:
     provider = FallbackFXProvider(providers=[
         FrankfurterProvider(),
         ExchangeRatesApiProvider()
     ])
-    default_margin = margin if margin is not None else 0.02
-    return CurrencyConversionService(provider=provider, default_margin=default_margin)
+    return CurrencyConversionService(provider=provider, default_margin=0.02)
+
+fx_service = _build_service()
 
 
 def _to_response_model(quote: TransactionQuote) -> QuoteResponse:
@@ -87,13 +88,12 @@ async def validation_exception_handler(_: RequestValidationError) -> JSONRespons
     },
 )
 def create_quote(request: QuoteRequest):
-    service = _build_service(request.margin)
-
-    quote = service.generate_quote(
+    quote = fx_service.generate_quote(
         base=request.baseCurrency,
         target=request.targetCurrency,
         amount=request.amount,
         flat_fee=request.flatFee,
+        margin=request.margin,
     )
 
     if quote is None:

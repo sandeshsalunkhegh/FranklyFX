@@ -13,7 +13,7 @@ class CurrencyConversionService:
         self.provider = provider
         self.margin = default_margin
 
-    def generate_quote(self, base: str, target: str, amount: float, flat_fee: float = 0.0) -> TransactionQuote | None:
+    def generate_quote(self, base: str, target: str, amount: float, flat_fee: float = 0.0, margin: float | None = None) -> TransactionQuote | None:
         logger.info("Generating FranklyFX quote: %s %s to %s", amount, base, target)
 
         if amount <= 0:
@@ -30,8 +30,10 @@ class CurrencyConversionService:
             logger.error("Failed to generate quote due to missing exchange rate data.")
             return None
 
+        actual_margin = margin if margin is not None else self.margin
+
         interbank_rate = exchange_rate_data.rate
-        consumer_rate = interbank_rate * (1 - self.margin)
+        consumer_rate = interbank_rate * (1 - actual_margin)
         target_amount_before_fees = amount * consumer_rate
         final_payout = target_amount_before_fees - flat_fee
 
@@ -41,7 +43,7 @@ class CurrencyConversionService:
             original_amount=amount,
             interbank_rate=interbank_rate,
             consumer_rate=consumer_rate,
-            final_payout=max(0, final_payout),  # Prevent negative payouts
+            final_payout=max(0.0, final_payout),  # Prevent negative payouts
             fees_applied=flat_fee,
             provider_name=exchange_rate_data.provider_name,
         )
