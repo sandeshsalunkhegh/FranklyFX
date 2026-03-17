@@ -20,13 +20,14 @@
     },
     {
       "src": "/(.*)",
-      "dest": "web/dist/$1"
+      "dest": "web/dist/$1",
+      "continue": true
     },
     {
       "handle": "filesystem"
     },
     {
-      "src": "/(.*)",
+      "src": "/web/dist/(.*)",
       "dest": "web/dist/index.html"
     }
   ]
