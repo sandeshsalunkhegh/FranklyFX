@@ -18,24 +18,26 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <label htmlFor={inputId} className="text-sm font-medium text-gray-700">
           {label}
         </label>
-        <div className="relative flex items-center">
+        <div 
+          className={`flex items-center w-full bg-white border rounded-xl overflow-hidden transition-shadow focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 ${
+            error ? 'border-red-500 focus-within:border-red-500 focus-within:ring-red-200' : 'border-gray-200 hover:border-gray-300'
+          }`}
+        >
           {leftAddon && (
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <div className="pl-4 pr-2 flex items-center pointer-events-none bg-transparent">
               <span className="text-gray-500 font-medium">{leftAddon}</span>
             </div>
           )}
           <input
             ref={ref}
             id={inputId}
-            className={`w-full py-2.5 bg-white border rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow ${
-              leftAddon ? 'pl-10' : 'px-4'
-            } ${rightAddon ? 'pr-10' : 'px-4'} ${
-              error ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 hover:border-gray-300'
-            }`}
+            className={`flex-1 py-2.5 bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none ${
+              !leftAddon ? 'pl-4' : ''
+            } ${!rightAddon ? 'pr-4' : ''}`}
             {...props}
           />
           {rightAddon && (
-            <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+            <div className="pr-4 pl-2 flex items-center pointer-events-none bg-transparent">
               <span className="text-gray-500 font-medium">{rightAddon}</span>
             </div>
           )}

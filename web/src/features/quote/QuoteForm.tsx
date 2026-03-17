@@ -81,51 +81,58 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <Input
-          label="Amount to Convert"
-          type="text"
-          leftAddon={baseSymbol}
-          value={amountStr}
-          onChange={(e) => setAmountStr(formatAmount(e.target.value))}
-          required
-        />
-        <Input
-          label={`Flat Fee (${baseCurrency})`}
-          type="number"
-          leftAddon={baseSymbol}
-          min="0"
-          step="0.01"
-          value={flatFee}
-          onChange={(e) => setFlatFee(e.target.value)}
-          required
-        />
-        
-        <div className="flex flex-col space-y-2">
+      <div className="space-y-6 pt-2">
+        <div className="grid grid-cols-2 gap-4">
           <Input
-            label="Margin Spread (%)"
-            type="number"
-            min="0"
-            step="0.1"
-            value={margin}
-            onChange={(e) => setMargin(e.target.value)}
+            label="Amount to Convert"
+            type="text"
+            leftAddon={baseSymbol}
+            value={amountStr}
+            onChange={(e) => setAmountStr(formatAmount(e.target.value))}
             required
           />
-          <div className="flex gap-1">
-            {['1.0', '1.5', '2.0'].map(opt => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => setMargin(opt)}
-                className={`flex-1 py-1 text-xs font-semibold rounded transition-colors ${
-                  margin === opt 
-                    ? 'bg-blue-100 text-blue-700' 
-                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                }`}
-              >
-                {opt}%
-              </button>
-            ))}
+          <Input
+            label={`Flat Fee (${baseCurrency})`}
+            type="number"
+            leftAddon={baseSymbol}
+            min="0"
+            step="0.01"
+            value={flatFee}
+            onChange={(e) => setFlatFee(e.target.value)}
+            required
+          />
+        </div>
+        
+        <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-gray-700">Advanced Provider Settings</h3>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4 items-end">
+            <Input
+              label="Margin Spread (%)"
+              type="number"
+              min="0"
+              step="0.1"
+              value={margin}
+              onChange={(e) => setMargin(e.target.value)}
+              required
+            />
+            <div className="flex gap-2 pb-1">
+              {['1.0', '1.5', '2.0'].map(opt => (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => setMargin(opt)}
+                  className={`flex-1 py-1.5 text-sm font-semibold rounded-lg transition-colors border ${
+                    margin === opt 
+                      ? 'bg-blue-100 text-blue-700 border-blue-200' 
+                      : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-gray-900'
+                  }`}
+                >
+                  {opt}%
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
