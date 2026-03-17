@@ -14,6 +14,7 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
   const [targetCurrency, setTargetCurrency] = useState('INR');
   const [amount, setAmount] = useState('1000');
   const [flatFee, setFlatFee] = useState('5');
+  const [margin, setMargin] = useState('2.0');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +23,7 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
       targetCurrency: targetCurrency.toUpperCase(),
       amount: parseFloat(amount),
       flatFee: parseFloat(flatFee),
+      margin: parseFloat(margin) / 100, // Convert percentage to decimal
     });
   };
 
@@ -69,7 +71,7 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <Input
           label="Amount to Convert"
           type="number"
@@ -86,6 +88,15 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
           step="0.01"
           value={flatFee}
           onChange={(e) => setFlatFee(e.target.value)}
+          required
+        />
+        <Input
+          label="Margin Spread (%)"
+          type="number"
+          min="0"
+          step="0.1"
+          value={margin}
+          onChange={(e) => setMargin(e.target.value)}
           required
         />
       </div>
