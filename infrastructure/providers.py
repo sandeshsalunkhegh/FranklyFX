@@ -12,12 +12,21 @@ class FrankfurterProvider(FXDataProvider):
     """Implementation of FXDataProvider using the free Frankfurter API."""
 
     def __init__(self) -> None:
-        self.base_url = "https://api.frankfurter.app/latest"
+        self.base_url = "https://api.frankfurter.dev/v1/latest"
         self.provider_name = "FranklyFX (via Frankfurter)"
 
     def fetch_rate(self, base: str, target: str) -> ExchangeRate | None:
         base, target = base.upper(), target.upper()
-        url = f"{self.base_url}?from={base}&to={target}"
+
+        if base == target:
+            return ExchangeRate(
+                base_currency=base,
+                target_currency=target,
+                rate=1.0,
+                provider_name=self.provider_name,
+            )
+
+        url = f"{self.base_url}?base={base}&symbols={target}"
 
         try:
             logger.debug("Calling external API: %s", url)
