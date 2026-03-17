@@ -4,6 +4,7 @@ import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { CurrencySelect } from '../../components/CurrencySelect';
 import { ArrowRightLeft, DollarSign } from 'lucide-react';
+import { CURRENCIES } from '../../data/currencies';
 
 interface QuoteFormProps {
   onSubmit: (request: QuoteRequest) => void;
@@ -13,18 +14,29 @@ interface QuoteFormProps {
 export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
   const [baseCurrency, setBaseCurrency] = useState('USD');
   const [targetCurrency, setTargetCurrency] = useState('INR');
-  const [amount, setAmount] = useState('1000');
-  const [flatFee, setFlatFee] = useState('5');
+  const [amountStr, setAmountStr] = useState('1,000');
+  const [flatFee, setFlatFee] = useState('5.00');
   const [margin, setMargin] = useState('2.0');
   const [isSwapping, setIsSwapping] = useState(false);
+
+  // Dynamic Symbol Lookups
+  const baseSymbol = CURRENCIES.find(c => c.code === baseCurrency)?.symbol || '$';
+
+  // Number Formatter (e.g. 1000000 -> 1,000,000)
+  const formatAmount = (val: string) => {
+    const naked = val.replace(/[^\d.]/g, '');
+    const parts = naked.split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return parts.join('.');
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
       baseCurrency: baseCurrency.toUpperCase(),
       targetCurrency: targetCurrency.toUpperCase(),
-      amount: parseFloat(amount),
-      flatFee: parseFloat(flatFee),
+      amount: parseFloat(amountStr.replace(/,/g, '')),
+      flatFee: parseFloat(flatFee.replace(/,/g, '')),
       margin: parseFloat(margin) / 100, // Convert percentage to decimal
     });
   };
@@ -72,31 +84,50 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
       <div className="grid grid-cols-3 gap-4">
         <Input
           label="Amount to Convert"
-          type="number"
-          min="0.01"
-          step="0.01"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          type="text"
+          leftAddon={baseSymbol}
+          value={amountStr}
+          onChange={(e) => setAmountStr(formatAmount(e.target.value))}
           required
         />
         <Input
           label={`Flat Fee (${baseCurrency})`}
           type="number"
+          leftAddon={baseSymbol}
           min="0"
           step="0.01"
           value={flatFee}
           onChange={(e) => setFlatFee(e.target.value)}
           required
         />
-        <Input
-          label="Margin Spread (%)"
-          type="number"
-          min="0"
-          step="0.1"
-          value={margin}
-          onChange={(e) => setMargin(e.target.value)}
-          required
-        />
+        
+        <div className="flex flex-col space-y-2">
+          <Input
+            label="Margin Spread (%)"
+            type="number"
+            min="0"
+            step="0.1"
+            value={margin}
+            onChange={(e) => setMargin(e.target.value)}
+            required
+          />
+          <div className="flex gap-1">
+            {['1.0', '1.5', '2.0'].map(opt => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setMargin(opt)}
+                className={`flex-1 py-1 text-xs font-semibold rounded transition-colors ${
+                  margin === opt 
+                    ? 'bg-blue-100 text-blue-700' 
+                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                }`}
+              >
+                {opt}%
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <Button
@@ -106,7 +137,7 @@ export function QuoteForm({ onSubmit, isLoading }: QuoteFormProps) {
         isLoading={isLoading}
         icon={<DollarSign size={20} />}
       >
-        Get Official Quote
+        {isSwapping ? 'Recalculating...' : `Calculate ${targetCurrency} Payout`}
       </Button>
     </form>
   );
