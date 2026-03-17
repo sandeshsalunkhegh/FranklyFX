@@ -16,3 +16,4 @@ class TransactionQuote:
     consumer_rate: float
     final_payout: float
     fees_applied: float
+    provider_name: str

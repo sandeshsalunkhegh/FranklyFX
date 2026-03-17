@@ -43,4 +43,5 @@ class CurrencyConversionService:
             consumer_rate=consumer_rate,
             final_payout=max(0, final_payout),  # Prevent negative payouts
             fees_applied=flat_fee,
+            provider_name=exchange_rate_data.provider_name,
         )
